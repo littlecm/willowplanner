@@ -69,7 +69,6 @@ preloaded_classes = [
     {"Class Name": "World History", "Period/Hour": 4},
     {"Class Name": "English 9 A", "Period/Hour": 5},
     {"Class Name": "Lifelong Fitness", "Period/Hour": 6},
-    {"Class Name": "Excused 7th Hour", "Period/Hour": 7},
 ]
 
 # Initialize session state to store classes and tasks
