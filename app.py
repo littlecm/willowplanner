@@ -21,7 +21,11 @@ def add_class(class_name, period):
 
 # Function to add a new task
 def add_task(selected_class, task, due_date):
-    st.session_state['tasks'].append({"Class": selected_class, "Task": task, "Due Date": due_date})
+    st.session_state['tasks'].append({"Class": selected_class, "Task": task, "Due Date": due_date, "Completed": False})
+
+# Function to mark a task as completed
+def mark_task_completed(index):
+    st.session_state['tasks'][index]["Completed"] = True
 
 # Function to remove a task
 def remove_task(index):
@@ -71,18 +75,28 @@ if st.session_state['classes']:
 else:
     st.write("You haven't added any classes yet. Add a class from the sidebar!")
 
-# Display tasks
+# Display and manage tasks
 st.header("Your Tasks")
 if st.session_state['tasks']:
     tasks_df = pd.DataFrame(st.session_state['tasks'])
-    st.table(tasks_df)
-    
-    # Remove task option
-    st.write("### Manage Tasks")
-    for i, task in enumerate(st.session_state['tasks']):
-        if st.button(f"Remove Task {i+1}"):
-            remove_task(i)
-            st.success(f"Task {i+1} removed successfully!")
+    for i, task in tasks_df.iterrows():
+        task_status = "✅ Completed" if task["Completed"] else "⏳ Incomplete"
+        col1, col2, col3, col4 = st.columns([3, 2, 2, 1])
+        with col1:
+            st.write(f"**{task['Class']}**: {task['Task']}")
+        with col2:
+            st.write(f"Due: {task['Due Date'].strftime('%b %d, %Y')}")
+        with col3:
+            st.write(f"Status: {task_status}")
+        with col4:
+            if not task["Completed"]:
+                if st.button(f"Mark Completed", key=f"complete_{i}"):
+                    mark_task_completed(i)
+                    st.experimental_rerun()
+            else:
+                if st.button(f"Remove", key=f"remove_{i}"):
+                    remove_task(i)
+                    st.experimental_rerun()
 
     # Clear all tasks option
     if st.button("Clear All Tasks"):
