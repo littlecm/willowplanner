@@ -9,15 +9,74 @@ st.set_page_config(
     layout="wide"
 )
 
+# Custom CSS for modern styling with Inter font
+st.markdown(
+    """
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    html, body, [class*="css"]  {
+        font-family: 'Inter', sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+    }
+
+    .stButton>button {
+        background-color: #007bff;
+        color: white;
+        border-radius: 10px;
+        border: none;
+        padding: 8px 16px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .stButton>button:hover {
+        background-color: #0056b3;
+    }
+
+    .stTextArea textarea {
+        border-radius: 10px;
+    }
+
+    .stDateInput>div>div>div {
+        border-radius: 10px;
+    }
+
+    .stDataFrame {
+        border-radius: 10px;
+        background-color: white;
+        padding: 10px;
+    }
+
+    footer {
+        text-align: center;
+        padding: 20px 0;
+        font-size: 14px;
+        color: #888;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Pre-loaded class schedule for Willow
+preloaded_classes = [
+    {"Class Name": "Algebra 1 Seminar", "Period/Hour": 1},
+    {"Class Name": "Biology", "Period/Hour": 2},
+    {"Class Name": "Algebra", "Period/Hour": 3},
+    {"Class Name": "World History", "Period/Hour": 4},
+    {"Class Name": "English 9 A", "Period/Hour": 5},
+    {"Class Name": "Lifelong Fitness", "Period/Hour": 6},
+    {"Class Name": "Excused 7th Hour", "Period/Hour": 7},
+]
+
 # Initialize session state to store classes and tasks
 if 'classes' not in st.session_state:
-    st.session_state['classes'] = []
+    st.session_state['classes'] = preloaded_classes
 if 'tasks' not in st.session_state:
     st.session_state['tasks'] = []
-
-# Function to add a new class
-def add_class(class_name, period):
-    st.session_state['classes'].append({"Class Name": class_name, "Period/Hour": period})
 
 # Function to add a new task
 def add_task(selected_class, task, due_date):
@@ -37,19 +96,7 @@ def clear_tasks():
 
 # Title and introduction
 st.title("High School Class Planner")
-st.write("### Welcome, Willow! Use this planner to easily track your classes, homework, projects, and other tasks.")
-
-# Sidebar for adding a new class
-st.sidebar.header("Add a New Class")
-class_name = st.sidebar.text_input("Class Name")
-period = st.sidebar.number_input("Period/Hour", min_value=1, max_value=10, step=1)
-
-if st.sidebar.button("Add Class"):
-    if class_name and period:
-        add_class(class_name, period)
-        st.sidebar.success("Class added successfully!")
-    else:
-        st.sidebar.error("Please fill in all the fields.")
+st.write("### Welcome, Willow! Stay organized with your classes, homework, projects, and more.")
 
 # Sidebar for adding a new task
 st.sidebar.header("Add a New Task")
@@ -73,7 +120,7 @@ if st.session_state['classes']:
     classes_df = pd.DataFrame(st.session_state['classes'])
     st.table(classes_df)
 else:
-    st.write("You haven't added any classes yet. Add a class from the sidebar!")
+    st.write("You haven't added any classes yet.")
 
 # Display and manage tasks
 st.header("Your Tasks")
@@ -105,6 +152,6 @@ if st.session_state['tasks']:
 else:
     st.write("You don't have any tasks yet. Add a task from the sidebar!")
 
-# Footer
+# Footer with credit to Dad
 st.write("---")
-st.write("📅 Stay organized and keep track of all your assignments with this planner!")
+st.markdown("<footer>Designed with ❤️ by Chris Little (aka Dad)</footer>", unsafe_allow_html=True)
